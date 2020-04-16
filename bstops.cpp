@@ -1,11 +1,12 @@
 /*Problem -  https://www.codechef.com/problems/BSTOPS*/
+/*Problem -  https://www.codechef.com/problems/BSTOPS*/
 #include <iostream>
 #include <stdio.h>
 
 using namespace std;
 
 struct BSTnode {
-    long key;
+    long long  key;
     long long position;
     BSTnode* parent;
     BSTnode* left;
@@ -22,7 +23,7 @@ public:
     BSTnode* TreeMinimum(BSTnode* current);
     void deletion(BSTnode* current);
     void Transplant(BSTnode* u, BSTnode* v);
-    BSTnode* Search(long key);
+    BSTnode* Search(long long key);
     void InorderTraversal(BSTnode*);
 };
 
@@ -31,7 +32,6 @@ long long BST::insertion(BSTnode *current) {
     BSTnode* y = nullptr;
     //traverse using this polonger
     BSTnode* x = root;
-    long cnt;
     while (x!= nullptr) {
         y = x;
         if(current->key < x->key) {
@@ -79,23 +79,24 @@ BSTnode *BST::TreeMinimum(BSTnode *current) {
 
 void BST::deletion(BSTnode *current) {
     BSTnode *y = nullptr;
-
     if(current->left == nullptr)
         Transplant(current, current->right);
     else if (current->right == nullptr)
         Transplant(current, current->left);
     else {
         y = TreeMinimum(current->right);
-        Transplant(y, y->right);
-        y->right = current->right;
-        y->right->parent = y;
+        if(y->parent != current) {
+            Transplant(y, y->right);
+            y->right = current->right;
+            y->right->parent = y;
+        }
         Transplant(current, y);
         y->left = current->left;
         y->left->parent = y;
     }
 }
 
-BSTnode *BST::Search(long key) {
+BSTnode *BST::Search(long long key) {
     BSTnode* x = root;
     while ( x!= nullptr && key != x->key) {
         if(key < x->key)
@@ -120,7 +121,7 @@ int main() {
     ios_base::sync_with_stdio(false);
     int Q;
     char ope;
-    long data;
+    long long data;
     cin>>Q;
     BST _bst;
     while (Q--) {
@@ -130,19 +131,20 @@ int main() {
             node->key = data;
             node->left = node->right = node->parent = nullptr;
             node->position = 0LL;
-            long ans= _bst.insertion(node);
+            long long ans= _bst.insertion(node);
             cout << ans << endl;
 
         }
         else {
             BSTnode* node = _bst.Search(data);
-            //prlonging position data
+            //printing position data
             cout << node->position << endl;
             _bst.deletion(node);
         }
     }
-    BSTnode* n = _bst.root;
-    _bst.InorderTraversal(n);
+
+//     BSTnode* n = _bst.root;
+//    _bst.InorderTraversal(n);
     return 0;
 }
 
