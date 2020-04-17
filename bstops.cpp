@@ -1,7 +1,9 @@
 /*Problem -  https://www.codechef.com/problems/BSTOPS*/
-/*Problem -  https://www.codechef.com/problems/BSTOPS*/
+
 #include <iostream>
 #include <stdio.h>
+#include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -30,15 +32,18 @@ public:
 
 long long BST::insertion(BSTnode *current) {
     BSTnode* y = nullptr;
-    //traverse using this polonger
+    //traverse using this pointer
     BSTnode* x = root;
+    long long cnt = 1;
     while (x!= nullptr) {
         y = x;
         if(current->key < x->key) {
+            cnt *= 2LL;
             x = x->left;
         }
         else {
             x = x->right;
+            cnt = 2*cnt +1LL;
         }
     }
     current->parent = y;
@@ -50,13 +55,13 @@ long long BST::insertion(BSTnode *current) {
     else if (current->key < y->key) {
         //insert
         y->left = current;
-        current->position = 2LL*y->position;
+        current->position = cnt;
     }
     else {
         y->right = current;
-        current->position = (2LL*y->position+1);
+        current->position = cnt;
     }
-    return current->position;
+    return cnt;
 }
 
 void BST::Transplant(BSTnode *u, BSTnode *v) {
@@ -130,10 +135,9 @@ int main() {
             BSTnode* node = new BSTnode;
             node->key = data;
             node->left = node->right = node->parent = nullptr;
-            node->position = 0LL;
+            node->position = 1LL;
             long long ans= _bst.insertion(node);
             cout << ans << endl;
-
         }
         else {
             BSTnode* node = _bst.Search(data);
@@ -147,4 +151,5 @@ int main() {
 //    _bst.InorderTraversal(n);
     return 0;
 }
+
 
